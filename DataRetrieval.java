@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class DataRetrievalController {
 
     @Autowired
-    private RedisTemplate<String, String> redisTemplate; // Autowire RedisTemplate
+    private RedisTemplate<String, String> redisTemplate; 
 
-    @Value("${jwt.secret}") // Load the secret key from properties file or environment variable
+    @Value("${jwt.secret}") 
     private String jwtSecret;
 
     // Constants
@@ -26,7 +26,7 @@ public class DataRetrievalController {
 
     @GetMapping("/")
     public ResponseEntity<Integer> getLatestSpeed(@RequestHeader("Authorization") String token) {
-        // Validate token (check expiration, format, etc.)
+        
         if (token == null || !token.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -39,10 +39,10 @@ public class DataRetrievalController {
                     .parseClaimsJws(jwt)
                     .getBody();
 
-            String email = claims.getSubject(); // Assuming subject holds the email
+            String email = claims.getSubject();
 
-            // Retrieve latest speed data from Redis based on user information
-            String latestSpeed = retrieveSpeedFromRedis(email); // Implement this method
+           
+            String latestSpeed = retrieveSpeedFromRedis(email); 
 
             if (latestSpeed == null) {
                 return ResponseEntity.notFound().build();
@@ -56,7 +56,7 @@ public class DataRetrievalController {
         }
     }
 
-    // Method to retrieve speed data from Redis based on user information
+   
     private String retrieveSpeedFromRedis(String email) {
         // Implement logic to fetch speed data from Redis based on user information
         String latestSpeed = redisTemplate.opsForValue().get(REDIS_SPEED_KEY_PREFIX + email);
