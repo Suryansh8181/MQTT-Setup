@@ -58,8 +58,12 @@ public class DataRetrievalController {
 
    
     private String retrieveSpeedFromRedis(String email) {
-        // Implement logic to fetch speed data from Redis based on user information
-        String latestSpeed = redisTemplate.opsForValue().get(REDIS_SPEED_KEY_PREFIX + email);
-        return latestSpeed;
+        String latestSpeed = redisDataService.retrieveSpeedFromRedisByEmail(email);
+
+        if (latestSpeed == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(Integer.parseInt(latestSpeed));
     }
 }
